@@ -15,39 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package ch.sportchef.events.business.ping.controller;
 
-group 'ch.sportchef'
-version '2.0-SNAPSHOT'
+import org.junit.Test;
 
-apply plugin: 'application'
-apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-mainClassName = 'ch.sportchef.events.Application'
+public class PingControllerTest {
 
-repositories {
-    mavenCentral()
-}
+    @Test
+    public void getPong() {
+        // arrange
+        final PingController pingController = new PingController();
 
-dependencies {
-    compile (
-            'com.sparkjava:spark-core:2.5.1',
-            'org.slf4j:slf4j-api:1.7.21',
-            'org.slf4j:slf4j-simple:1.7.21'
-    )
-    testCompile (
-            'junit:junit:4.12',
-            'org.hamcrest:java-hamcrest:2.0.0.0'
-    )
-}
+        // act
+        final String pong = pingController.getPong();
 
-buildscript {
-    repositories {
-        jcenter()
+        // assert
+        assertThat(pong, startsWith("Pong from "));
+        assertThat(pong, is(not("Pong from null")));
+        assertThat(pong.length(), is(greaterThan(10)));
     }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-    }
+
 }
