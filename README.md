@@ -1,6 +1,8 @@
 *SportChef Events*
 ==================
 
+[![Build Status](https://travis-ci.org/sportchef/sportchef-events.svg?branch=master)](https://travis-ci.org/sportchef/sportchef-events)
+
 **This repository contains the code for the microservice handling the events of the *SportChef* project. For more information please take a look at our [project website](https://www.sportchef.ch/).**
 
 *Copyright (C) 2015, 2016 Marcus Fihlon*
