@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -32,11 +31,9 @@ public class PingResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PingResource.class);
 
-    private final Route pong = (final Request request, final Response response) -> String.format("Pong from %s",
-            getHostname());
-
     public PingResource() {
-        get("/ping", pong);
+        get("/ping", (final Request request, final Response response) ->
+                String.format("Pong from %s", getHostname()));
     }
 
     private String getHostname() {
