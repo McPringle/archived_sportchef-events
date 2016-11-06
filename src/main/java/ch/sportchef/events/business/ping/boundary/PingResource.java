@@ -17,35 +17,16 @@
  */
 package ch.sportchef.events.business.ping.boundary;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ch.sportchef.events.business.ping.controller.PingController;
 import spark.Request;
 import spark.Response;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import static spark.Spark.get;
 
 public class PingResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PingResource.class);
-
-    public PingResource() {
-        get("/ping", (final Request request, final Response response) ->
-                String.format("Pong from %s", getHostname()));
-    }
-
-    private String getHostname() {
-        String hostname = System.getenv("HOSTNAME");
-        if (hostname == null) {
-            try {
-                hostname = InetAddress.getLocalHost().getHostName();
-            } catch (final UnknownHostException e) {
-                LOGGER.error("Unable to determine hostname.", e);
-            }
-        }
-        return hostname;
+    public PingResource(final PingController pingController) {
+        get("/ping", (final Request request, final Response response) -> pingController.getPong());
     }
 
 }
