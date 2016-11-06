@@ -35,7 +35,7 @@ public class Application {
         port(8080);
 
         // Register routes
-        new PingResource(new PingController());
+        PingResource.registerRoutes(new PingController());
 
         // Set up after-filters (called after each request)
         after((Request request, Response response) -> response.header("Content-Encoding", "gzip"));

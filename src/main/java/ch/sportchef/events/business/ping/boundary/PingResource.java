@@ -18,14 +18,16 @@
 package ch.sportchef.events.business.ping.boundary;
 
 import ch.sportchef.events.business.ping.controller.PingController;
+import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
 
 import static spark.Spark.get;
 
+@UtilityClass
 public class PingResource {
 
-    public PingResource(final PingController pingController) {
+    public static void registerRoutes(final PingController pingController) {
         get("/ping", (final Request request, final Response response) -> pingController.getPong());
     }
 
