@@ -35,6 +35,10 @@ public class PingResource {
     private final Route pong = (final Request request, final Response response) -> String.format("Pong from %s",
             getHostname());
 
+    public PingResource() {
+        get("/ping", pong);
+    }
+
     private String getHostname() {
         String hostname = System.getenv("HOSTNAME");
         if (hostname == null) {
@@ -45,10 +49,6 @@ public class PingResource {
             }
         }
         return hostname;
-    }
-
-    public PingResource() {
-        get("/ping", pong);
     }
 
 }
