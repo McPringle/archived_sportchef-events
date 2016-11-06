@@ -55,13 +55,13 @@ jacocoTestReport {
 
 dependencies {
     compile (
-            'com.sparkjava:spark-core:2.5.1',
-            'org.projectlombok:lombok:1.16.10',
-            'org.slf4j:slf4j-api:1.7.21',
-            'org.slf4j:slf4j-simple:1.7.21'
+            'com.sparkjava:spark-core:2.5.1',    // amazing micro framework
+            'org.projectlombok:lombok:1.16.10',  // clean-up your source files
+            'org.slf4j:slf4j-api:1.7.21',        // log framework abstraction
+            'org.slf4j:slf4j-simple:1.7.21'      // just logs to the console
     )
     testCompile (
-            'junit:junit:4.12',
-            'org.hamcrest:java-hamcrest:2.0.0.0'
+            'junit:junit:4.12',                  // THE testing framework
+            'org.hamcrest:java-hamcrest:2.0.0.0' // write flexible assertions
     )
 }
