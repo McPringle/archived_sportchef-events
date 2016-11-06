@@ -19,12 +19,14 @@ package ch.sportchef.events;
 
 import ch.sportchef.events.business.ping.boundary.PingResource;
 import ch.sportchef.events.business.ping.controller.PingController;
+import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
 
 import static spark.Spark.after;
 import static spark.Spark.port;
 
+@UtilityClass
 public class Application {
 
     public static void main(final String... args) {

@@ -34,6 +34,7 @@ repositories {
 dependencies {
     compile (
             'com.sparkjava:spark-core:2.5.1',
+            'org.projectlombok:lombok:1.16.10',
             'org.slf4j:slf4j-api:1.7.21',
             'org.slf4j:slf4j-simple:1.7.21'
     )
