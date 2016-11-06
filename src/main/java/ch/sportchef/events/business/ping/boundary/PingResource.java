@@ -17,6 +17,8 @@
  */
 package ch.sportchef.events.business.ping.boundary;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -28,6 +30,8 @@ import static spark.Spark.get;
 
 public class PingResource {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PingResource.class);
+
     private final Route pong = (final Request request, final Response response) -> String.format("Pong from %s",
             getHostname());
 
@@ -36,8 +40,8 @@ public class PingResource {
         if (hostname == null) {
             try {
                 hostname = InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
+            } catch (final UnknownHostException e) {
+                LOGGER.error("Unable to determine hostname.", e);
             }
         }
         return hostname;
