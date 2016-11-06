@@ -17,15 +17,13 @@
  */
 package ch.sportchef.events.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+@Slf4j
 public class PingController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PingController.class);
 
     private String getHostname() {
         String hostname = System.getenv("HOSTNAME");
@@ -33,7 +31,7 @@ public class PingController {
             try {
                 hostname = InetAddress.getLocalHost().getHostName();
             } catch (final UnknownHostException e) {
-                LOGGER.error("Unable to determine hostname.", e);
+                log.error("Unable to determine hostname.", e);
             }
         }
         return hostname;
