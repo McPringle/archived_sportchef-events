@@ -33,19 +33,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile (
-            'com.sparkjava:spark-core:2.5.1',
-            'org.projectlombok:lombok:1.16.10',
-            'org.slf4j:slf4j-api:1.7.21',
-            'org.slf4j:slf4j-simple:1.7.21'
-    )
-    testCompile (
-            'junit:junit:4.12',
-            'org.hamcrest:java-hamcrest:2.0.0.0'
-    )
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -64,4 +51,17 @@ jacocoTestReport {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+}
+
+dependencies {
+    compile (
+            'com.sparkjava:spark-core:2.5.1',
+            'org.projectlombok:lombok:1.16.10',
+            'org.slf4j:slf4j-api:1.7.21',
+            'org.slf4j:slf4j-simple:1.7.21'
+    )
+    testCompile (
+            'junit:junit:4.12',
+            'org.hamcrest:java-hamcrest:2.0.0.0'
+    )
 }
