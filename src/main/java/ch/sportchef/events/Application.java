@@ -38,9 +38,7 @@ public class Application {
         new PingResource(new PingController());
 
         // Set up after-filters (called after each request)
-        after((Request request, Response response) -> {
-            response.header("Content-Encoding", "gzip");
-        });
+        after((Request request, Response response) -> response.header("Content-Encoding", "gzip"));
     }
 
 }
