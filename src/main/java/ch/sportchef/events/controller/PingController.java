@@ -15,20 +15,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.sportchef.events.business.ping.boundary;
+package ch.sportchef.events.controller;
 
-import ch.sportchef.events.business.ping.controller.PingController;
-import lombok.experimental.UtilityClass;
-import spark.Request;
-import spark.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static spark.Spark.get;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-@UtilityClass
-public class PingResource {
+public class PingController {
 
-    public static void registerRoutes(final PingController pingController) {
-        get("/ping", (final Request request, final Response response) -> pingController.getPong());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PingController.class);
+
+    private String getHostname() {
+        String hostname = System.getenv("HOSTNAME");
+        if (hostname == null) {
+            try {
+                hostname = InetAddress.getLocalHost().getHostName();
+            } catch (final UnknownHostException e) {
+                LOGGER.error("Unable to determine hostname.", e);
+            }
+        }
+        return hostname;
     }
 
+    public String getPong() {
+        return String.format("Pong from %s", getHostname());
+    }
 }

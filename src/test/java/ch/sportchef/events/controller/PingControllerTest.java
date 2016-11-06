@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.sportchef.events.business.ping.controller;
+package ch.sportchef.events.controller;
 
 import org.junit.Test;
 

@@ -17,8 +17,8 @@
  */
 package ch.sportchef.events;
 
-import ch.sportchef.events.business.ping.boundary.PingResource;
-import ch.sportchef.events.business.ping.controller.PingController;
+import ch.sportchef.events.boundary.PingResource;
+import ch.sportchef.events.controller.PingController;
 import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
