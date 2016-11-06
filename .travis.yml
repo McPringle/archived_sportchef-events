@@ -10,7 +10,7 @@ addons:
   sonarqube: true
 
 after_success:
-  - ./gradlew shadowJar
+  - ./gradlew shadowJar test jacocoTestReport coveralls
   - docker build -t sportchef/events .
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - docker push sportchef/events
