@@ -21,9 +21,6 @@ import ch.sportchef.events.entity.Event;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,16 +31,6 @@ public class EventService {
 
     private final Map<Long, Event> allEvents = new ConcurrentHashMap<>();
     private final AtomicLong eventSequence = new AtomicLong(0);
-
-    public EventService() {
-        final Event event = Event.builder()
-                .title("Testevent")
-                .location("Testlocation")
-                .date(LocalDate.of(2099, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build();
-        create(event);
-    }
 
     public Event create(@NonNull final Event event) {
         final Long eventId = eventSequence.incrementAndGet();
