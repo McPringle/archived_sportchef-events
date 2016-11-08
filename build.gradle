@@ -55,6 +55,8 @@ jacocoTestReport {
 
 dependencies {
     compile (
+            'com.google.code.gson:gson:2.8.0',   // easy to use JSON parser
+            'com.google.guava:guava:20.0',       // tons of utilities
             'com.sparkjava:spark-core:2.5.1',    // amazing micro framework
             'org.projectlombok:lombok:1.16.10',  // clean-up your source files
             'org.slf4j:slf4j-api:1.7.21',        // log framework abstraction

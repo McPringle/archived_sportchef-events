@@ -17,13 +17,16 @@
  */
 package ch.sportchef.events;
 
+import ch.sportchef.events.boundary.EventResource;
 import ch.sportchef.events.boundary.PingResource;
+import ch.sportchef.events.controller.EventService;
 import ch.sportchef.events.controller.PingService;
 import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
 
 import static spark.Spark.after;
+import static spark.Spark.before;
 import static spark.Spark.port;
 
 @UtilityClass
@@ -35,7 +38,11 @@ public class Application {
         port(8080);
 
         // Register routes
+        EventResource.registerRoutes(new EventService());
         PingResource.registerRoutes(new PingService());
+
+        // Set up before-filters (called before each request)
+        before((Request request, Response response) -> response.header("Content-Type", "application/json"));
 
         // Set up after-filters (called after each request)
         after((Request request, Response response) -> response.header("Content-Encoding", "gzip"));
