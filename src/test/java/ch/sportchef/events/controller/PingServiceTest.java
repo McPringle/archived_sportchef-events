@@ -25,15 +25,15 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
-public class PingControllerTest {
+public class PingServiceTest {
 
     @Test
     public void getPong() {
         // arrange
-        final PingController pingController = new PingController();
+        final PingService pingService = new PingService();
 
         // act
-        final String pong = pingController.getPong();
+        final String pong = pingService.getPong();
 
         // assert
         assertThat(pong, startsWith("Pong from "));

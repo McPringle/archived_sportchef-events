@@ -23,7 +23,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Slf4j
-public class PingController {
+public class PingService {
 
     private String getHostname() {
         String hostname = System.getenv("HOSTNAME");

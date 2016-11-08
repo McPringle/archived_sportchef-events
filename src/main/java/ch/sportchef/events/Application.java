@@ -18,7 +18,7 @@
 package ch.sportchef.events;
 
 import ch.sportchef.events.boundary.PingResource;
-import ch.sportchef.events.controller.PingController;
+import ch.sportchef.events.controller.PingService;
 import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
@@ -35,7 +35,7 @@ public class Application {
         port(8080);
 
         // Register routes
-        PingResource.registerRoutes(new PingController());
+        PingResource.registerRoutes(new PingService());
 
         // Set up after-filters (called after each request)
         after((Request request, Response response) -> response.header("Content-Encoding", "gzip"));
