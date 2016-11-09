@@ -18,6 +18,7 @@
 package ch.sportchef.events.controller;
 
 import ch.sportchef.events.entity.Event;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -32,10 +33,16 @@ import static org.hamcrest.Matchers.is;
 
 public class EventServiceTest {
 
+    private EventService eventService;
+
+    @Before
+    public void setUp() {
+        this.eventService = new EventService();
+    }
+
     @Test
     public void create() {
         // arrange
-        final EventService eventService = new EventService();
         final Event event = Event.builder()
                 .title("Testevent")
                 .location("Testlocation")
@@ -44,26 +51,36 @@ public class EventServiceTest {
                 .build();
 
         // act
-        final Event createdEvent = eventService.create(event);
+        create(event);
 
         // assert
-        assertThat(createdEvent, is(event.toBuilder().eventId(2L).build()));
+    }
+
+    private Event create(final Event testEvent) {
+        // arrange
+
+        // act
+        final Event createdEvent = this.eventService.create(testEvent);
+
+        // assert
+        assertThat(createdEvent, is(testEvent.toBuilder().eventId(1L).build()));
+
+        return createdEvent;
     }
 
     @Test
     public void readAll() {
         // arrange
-        final EventService eventService = new EventService();
-        final Event testEvent = Event.builder()
+        final Event testEvent = create(Event.builder()
                 .eventId(1L)
                 .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
-                .build();
+                .build());
 
         // act
-        final List<Event> allEvents = eventService.read();
+        final List<Event> allEvents = this.eventService.read();
 
         // assert
         assertThat(allEvents.size(), is(1));
@@ -73,17 +90,16 @@ public class EventServiceTest {
     @Test
     public void readOne() {
         // arrange
-        final EventService eventService = new EventService();
-        final Event testEvent = Event.builder()
+        final Event testEvent = create(Event.builder()
                 .eventId(1L)
                 .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
-                .build();
+                .build());
 
         // act
-        final Optional<Event> event = eventService.read(1L);
+        final Optional<Event> event = this.eventService.read(1L);
 
         // assert
         assertThat(event.isPresent(), is(TRUE));
@@ -93,7 +109,6 @@ public class EventServiceTest {
     @Test
     public void update() {
         // arrange
-        final EventService eventService = new EventService();
         final Event testEvent = Event.builder()
                 .eventId(1L)
                 .title("Testevent Updated")
@@ -103,7 +118,7 @@ public class EventServiceTest {
                 .build();
 
         // act
-        final Event updatedEvent = eventService.update(testEvent);
+        final Event updatedEvent = this.eventService.update(testEvent);
 
         // assert
         assertThat(updatedEvent, is(testEvent));
@@ -112,17 +127,15 @@ public class EventServiceTest {
     @Test
     public void delete() {
         // arrange
-        final EventService eventService = new EventService();
-        final Event testEvent = Event.builder()
-                .eventId(1L)
+        final Event testEvent = create(Event.builder()
                 .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
-                .build();
+                .build());
 
         // act
-        final Event deletedEvent = eventService.delete(1L);
+        final Event deletedEvent = this.eventService.delete(testEvent.getEventId());
 
         // assert
         assertThat(deletedEvent, is(testEvent));
