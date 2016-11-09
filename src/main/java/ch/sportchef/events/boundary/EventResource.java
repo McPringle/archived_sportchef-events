@@ -25,6 +25,7 @@ import lombok.experimental.UtilityClass;
 import spark.Request;
 import spark.Response;
 
+import java.util.ConcurrentModificationException;
 import java.util.Optional;
 
 import static spark.Spark.delete;
@@ -36,6 +37,8 @@ import static spark.Spark.put;
 public class EventResource {
 
     public static void registerRoutes(@NonNull final EventService eventService) {
+
+        // create
         post("/events", (final Request request, final Response response) -> {
             final String json = request.body();
             final Gson gson = new Gson();
@@ -49,8 +52,8 @@ public class EventResource {
             return json;
         });
 
+        // read
         get("/events", (final Request request, final Response response) -> new Gson().toJson(eventService.read()));
-
         get("/event/:eventId", (final Request request, final Response response) -> {
             final Long eventId = Long.parseLong(request.params(":eventId"));
             final Optional<Event> optional = eventService.read(eventId);
@@ -64,24 +67,31 @@ public class EventResource {
             return eventId;
         });
 
+        // update
         put("/event/:eventId", (final Request request, final Response response) -> {
             final Long eventId = Long.parseLong(request.params(":eventId"));
             final String json = request.body();
             final Gson gson = new Gson();
             final Event event = gson.fromJson(json, Event.class).toBuilder().eventId(eventId).build();
             if (event.isValid()) {
-                final Event updatedEvent = eventService.update(event);
-                if (updatedEvent != null) {
-                    response.status(200); // OK
-                    return gson.toJson(updatedEvent);
+                try {
+                    final Event updatedEvent = eventService.update(event);
+                    if (updatedEvent != null) {
+                        response.status(200); // OK
+                        return gson.toJson(updatedEvent);
+                    }
+                    response.status(404); // NOT FOUND
+                    return gson.toJson(eventId);
+                } catch (final ConcurrentModificationException e) {
+                    response.status(409); // CONFLICT
+                    return json;
                 }
-                response.status(404); // NOT FOUND
-                return gson.toJson(eventId);
             }
             response.status(400); // BAD REQUEST
             return json;
         });
 
+        // delete
         delete("/event/:eventId", (final Request request, final Response response) -> {
             final Long eventId = Long.parseLong(request.params(":eventId"));
             final Event event = eventService.delete(eventId);

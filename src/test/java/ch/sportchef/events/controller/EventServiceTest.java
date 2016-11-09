@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,19 +110,40 @@ public class EventServiceTest {
     @Test
     public void update() {
         // arrange
-        final Event testEvent = Event.builder()
+        final Event originalTestEvent = create(Event.builder()
                 .eventId(1L)
-                .title("Testevent Updated")
+                .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
-                .build();
+                .build());
+        final Event modifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated").build();
 
         // act
-        final Event updatedEvent = this.eventService.update(testEvent);
+        final Event updatedEvent = this.eventService.update(modifiedTestEvent);
 
         // assert
-        assertThat(updatedEvent, is(testEvent));
+        assertThat(updatedEvent, is(modifiedTestEvent));
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void concurrentUpdate() {
+        // arrange
+        final Event originalTestEvent = create(Event.builder()
+                .eventId(1L)
+                .title("Testevent")
+                .location("Testlocation")
+                .date(LocalDate.of(2099, Month.DECEMBER, 31))
+                .time(LocalTime.of(22, 0))
+                .build());
+        final Event firstModifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated 1").build();
+        final Event secondModifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated 2").build();
+
+        // act
+        this.eventService.update(firstModifiedTestEvent);
+        this.eventService.update(secondModifiedTestEvent);
+
+        // assert
     }
 
     @Test

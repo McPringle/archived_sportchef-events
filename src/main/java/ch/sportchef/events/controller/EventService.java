@@ -21,6 +21,7 @@ import ch.sportchef.events.entity.Event;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,9 +35,10 @@ public class EventService {
 
     public Event create(@NonNull final Event event) {
         final Long eventId = eventSequence.incrementAndGet();
-        final Event createdEvent = event.toBuilder().eventId(eventId).build();
-        allEvents.put(eventId, createdEvent);
-        return createdEvent;
+        final long version = event.hashCode();
+        final Event eventToCreate = event.toBuilder().eventId(eventId).version(version).build();
+        allEvents.put(eventId, eventToCreate);
+        return eventToCreate;
     }
 
     public List<Event> read() {
@@ -49,8 +51,17 @@ public class EventService {
 
     public Event update(@NonNull final Event event) {
         final Long eventId = event.getEventId();
-        allEvents.put(eventId, event);
-        return event;
+        final Event previousEvent = read(eventId).orElse(null);
+        if (previousEvent == null) {
+            return null; // non-existing events can't be updated
+        }
+        if (!previousEvent.getVersion().equals(event.getVersion())) {
+            throw new ConcurrentModificationException("You tried to update an event that was modified concurrently!");
+        }
+        final long version = event.hashCode();
+        final Event eventToUpdate = event.toBuilder().version(version).build();
+        allEvents.put(eventId, eventToUpdate);
+        return eventToUpdate;
     }
 
     public Event delete(@NonNull final Long eventId) {

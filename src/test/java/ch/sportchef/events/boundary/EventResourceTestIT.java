@@ -69,6 +69,7 @@ public class EventResourceTestIT {
         readExistingEvent(createdEvent);
         final Event updatedEvent = updateExistingEvent(createdEvent.toBuilder().title("Testevent Updated").build());
         updateNonExistingEvent(createdEvent.toBuilder().eventId(1234L).title("Testevent Updated").build());
+        updateConflictingEvent(createdEvent.toBuilder().title("Testevent Conflict").build());
         readExistingEvent(updatedEvent);
         deleteExistingEvent(updatedEvent);
         deleteNonExistingEvent(updatedEvent);
@@ -153,10 +154,22 @@ public class EventResourceTestIT {
         final String json = new Gson().toJson(eventToUpdate);
 
         // act
-        final Response response = given().contentType(ContentType.JSON).body(json).post("/event/{eventId}", eventId);
+        final Response response = given().contentType(ContentType.JSON).body(json).put("/event/{eventId}", eventId);
 
         // assert
         assertThat(response.statusCode(), is(404));
+    }
+
+    private void updateConflictingEvent(@NonNull final Event eventToUpdate) {
+        // arrange
+        final Long eventId = eventToUpdate.getEventId();
+        final String json = new Gson().toJson(eventToUpdate);
+
+        // act
+        final Response response = given().contentType(ContentType.JSON).body(json).put("/event/{eventId}", eventId);
+
+        // assert
+        assertThat(response.statusCode(), is(409));
     }
 
     private void deleteExistingEvent(@NonNull final Event eventToDelete) {

@@ -19,6 +19,7 @@ package ch.sportchef.events.entity;
 
 import com.google.common.base.Strings;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.io.Serializable;
@@ -27,6 +28,7 @@ import java.time.LocalTime;
 
 @Value
 @Builder(toBuilder = true)
+@EqualsAndHashCode(exclude={"version"})
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
