@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 public class EventServiceTest {
@@ -44,7 +45,7 @@ public class EventServiceTest {
     @Test
     public void create() {
         // arrange
-        final Event event = Event.builder()
+        final Event testEvent = Event.builder()
                 .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
@@ -52,9 +53,10 @@ public class EventServiceTest {
                 .build();
 
         // act
-        create(event);
+        final Event createdEvent = create(testEvent);
 
         // assert
+        assertThat(createdEvent, is(testEvent.toBuilder().eventId(1L).build()));
     }
 
     private Event create(final Event testEvent) {
@@ -64,7 +66,6 @@ public class EventServiceTest {
         final Event createdEvent = this.eventService.create(testEvent);
 
         // assert
-        assertThat(createdEvent, is(testEvent.toBuilder().eventId(1L).build()));
 
         return createdEvent;
     }
@@ -72,11 +73,18 @@ public class EventServiceTest {
     @Test
     public void readAll() {
         // arrange
-        final Event testEvent = create(Event.builder()
+        final Event testEvent1 = create(Event.builder()
                 .eventId(1L)
-                .title("Testevent")
+                .title("Testevent 1")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
+                .time(LocalTime.of(22, 0))
+                .build());
+        final Event testEvent2 = create(Event.builder()
+                .eventId(2L)
+                .title("Testevent 2")
+                .location("Testlocation")
+                .date(LocalDate.of(2009, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
                 .build());
 
@@ -84,8 +92,8 @@ public class EventServiceTest {
         final List<Event> allEvents = this.eventService.read();
 
         // assert
-        assertThat(allEvents.size(), is(1));
-        assertThat(allEvents.get(0), is(testEvent));
+        assertThat(allEvents.size(), is(2));
+        assertThat(allEvents, contains(testEvent2, testEvent1));
     }
 
     @Test

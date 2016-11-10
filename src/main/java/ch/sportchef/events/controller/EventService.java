@@ -21,12 +21,15 @@ import ch.sportchef.events.entity.Event;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
+import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static java.util.stream.Collectors.toList;
 
 public class EventService {
 
@@ -42,7 +45,14 @@ public class EventService {
     }
 
     public List<Event> read() {
-        return ImmutableList.copyOf(allEvents.values());
+        return ImmutableList.copyOf(
+                allEvents.values().stream()
+                        .sorted((event1, event2) -> {
+                            final LocalDateTime event1DateTime = LocalDateTime.of(event1.getDate(), event1.getTime());
+                            final LocalDateTime event2DateTime = LocalDateTime.of(event2.getDate(), event2.getTime());
+                            return event1DateTime.compareTo(event2DateTime);
+                        })
+                        .collect(toList()));
     }
 
     public Optional<Event> read(@NonNull final Long eventId) {
