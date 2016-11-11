@@ -15,31 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.sportchef.events.boundary;
+package ch.sportchef.events;
 
-import ch.sportchef.events.controller.PingService;
-import lombok.NonNull;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-@Path("ping")
-@Produces(MediaType.TEXT_PLAIN)
-public class PingResource {
-
-    private PingService pingService;
-
-    @Inject
-    public PingResource(@NonNull final PingService pingService) {
-        this.pingService = pingService;
-    }
-
-    @GET
-    public String pingPong() {
-        return pingService.getPong();
-    }
-
+@ApplicationPath("/")
+public class JAXRSConfiguration extends Application {
 }

@@ -23,57 +23,40 @@ import lombok.NonNull;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.File;
 import java.net.URI;
-import java.util.Optional;
+import java.util.List;
 
-@Path("event/{eventId}")
+@Path("events")
 @Produces(MediaType.APPLICATION_JSON)
-public class EventResource {
+public class EventsResource {
 
     private EventService eventService;
 
     @Inject
-    public EventResource(@NonNull final EventService eventService) {
+    public EventsResource(@NonNull final EventService eventService) {
         this.eventService = eventService;
     }
 
-    @GET
-    public Response read(@NonNull @PathParam("eventId") final Long eventId) {
-        final Optional<Event> event = eventService.read(eventId);
-        if (event.isPresent()) {
-            return Response.ok(event.get()).build();
-        }
-        throw new NotFoundException(String.format("Event with id '%d' not found.", eventId));
-    }
-
-    @PUT
-    public Response update(@NonNull @PathParam("eventId") final Long eventId,
-                           @NonNull @Valid final Event event,
+    public Response create(@NonNull @Valid final Event event,
                            @NonNull @Context final UriInfo info) {
-        read(eventId); // only update existing events
-        final Event eventToUpdate = event.toBuilder()
-                .eventId(eventId)
-                .build();
-        final Event updatedEvent = eventService.update(eventToUpdate);
-        final URI uri = info.getAbsolutePathBuilder().build();
-        return Response.ok(updatedEvent).header("Location", uri.toString()).build();
+        final Event createdEvent = eventService.create(event);
+        final long eventId = createdEvent.getEventId();
+        final URI uri = info.getAbsolutePathBuilder().path(File.separator + eventId).build();
+        return Response.created(uri).build();
     }
 
-    @DELETE
-    public Response delete(@NonNull @PathParam("eventId") final Long eventId) {
-        read(eventId); // only delete existing events
-        eventService.delete(eventId);
-        return Response.noContent().build();
+    @GET
+    public Response read() {
+        final List<Event> events = eventService.read();
+        return Response.ok(events).build();
     }
+
 }

@@ -19,15 +19,13 @@
 group 'ch.sportchef'
 version '2.0-SNAPSHOT'
 
-apply plugin: 'application'
 apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-mainClassName = 'ch.sportchef.events.Application'
 
 repositories {
     mavenCentral()
@@ -38,7 +36,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
@@ -54,17 +51,21 @@ jacocoTestReport {
 }
 
 dependencies {
+    providedCompile (
+            'javax:javaee-api:7.0'                        // amazing microservice framework
+    )
     compile (
-            'com.google.code.gson:gson:2.8.0',    // easy to use JSON parser
-            'com.google.guava:guava:20.0',        // tons of utilities
-            'com.sparkjava:spark-core:2.5.1',     // amazing micro framework
-            'org.projectlombok:lombok:1.16.10',   // clean-up your source files
-            'org.slf4j:slf4j-api:1.7.21',         // log framework abstraction
-            'org.slf4j:slf4j-simple:1.7.21'       // just logs to the console
+            'com.google.code.gson:gson:2.8.0',            // easy to use JSON parser
+            'com.google.guava:guava:20.0',                // tons of utilities
+            'org.projectlombok:lombok:1.16.10',           // clean-up your source files
+            'org.slf4j:slf4j-api:1.7.21',                 // log framework abstraction
+            'org.slf4j:slf4j-simple:1.7.21',              // just logs to the console
+            'org.zalando.phrs:jersey-media-json-gson:0.1' // Jersey GSON entity providers support
     )
     testCompile (
-            'io.rest-assured:rest-assured:3.0.1', // use simple DSL to test REST API
-            'junit:junit:4.12',                   // THE testing framework
-            'org.hamcrest:java-hamcrest:2.0.0.0'  // write flexible assertions
+            'junit:junit:4.12',                           // THE testing framework
+            'org.hamcrest:java-hamcrest:2.0.0.0',         // write flexible assertions
+            'org.mockito:mockito-core:2.2.15',            // best mocking framework ever
+            'org.needle4j:needle4j:2.3'                   // testing Java EE components
     )
 }

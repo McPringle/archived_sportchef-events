@@ -21,6 +21,7 @@ import ch.sportchef.events.entity.Event;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
+import javax.inject.Singleton;
 import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.stream.Collectors.toList;
 
+@Singleton
 public class EventService {
 
     private final Map<Long, Event> allEvents = new ConcurrentHashMap<>();
