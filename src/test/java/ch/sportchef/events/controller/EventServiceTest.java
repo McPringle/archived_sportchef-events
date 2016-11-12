@@ -17,34 +17,40 @@
  */
 package ch.sportchef.events.controller;
 
+import ch.sportchef.events.PersistenceManager;
 import ch.sportchef.events.entity.Event;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.core.VoidCommand;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PersistenceManager.class)
 public class EventServiceTest {
-
-    private EventService eventService;
-
-    @Before
-    public void setUp() {
-        this.eventService = new EventService();
-    }
 
     @Test
     public void create() {
         // arrange
+        final SimpleController<Serializable> simpleControllerMock = mock(SimpleController.class);
+        mockStatic(PersistenceManager.class);
+        when(PersistenceManager.createSimpleController(any(), any())).thenReturn(simpleControllerMock);
+        final EventService eventService = new EventService();
+        eventService.setupResources();
         final Event testEvent = Event.builder()
                 .title("Testevent")
                 .location("Testlocation")
@@ -53,122 +59,87 @@ public class EventServiceTest {
                 .build();
 
         // act
-        final Event createdEvent = create(testEvent);
+        eventService.create(testEvent);
 
         // assert
-        assertThat(createdEvent, is(testEvent.toBuilder().eventId(1L).build()));
-    }
-
-    private Event create(final Event testEvent) {
-        // arrange
-
-        // act
-        final Event createdEvent = this.eventService.create(testEvent);
-
-        // assert
-
-        return createdEvent;
+        verify(simpleControllerMock, times(1)).executeAndQuery(anyObject());
     }
 
     @Test
     public void readAll() {
         // arrange
-        final Event testEvent1 = create(Event.builder()
-                .eventId(1L)
-                .title("Testevent 1")
-                .location("Testlocation")
-                .date(LocalDate.of(2099, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build());
-        final Event testEvent2 = create(Event.builder()
-                .eventId(2L)
-                .title("Testevent 2")
-                .location("Testlocation")
-                .date(LocalDate.of(2009, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build());
+        final SimpleController<Serializable> simpleControllerMock = mock(SimpleController.class);
+        final EventRepository eventRepositoryMock = mock(EventRepository.class);
+        when(simpleControllerMock.readOnly()).thenReturn(eventRepositoryMock);
+        mockStatic(PersistenceManager.class);
+        when(PersistenceManager.createSimpleController(any(), any())).thenReturn(simpleControllerMock);
+        final EventService eventService = new EventService();
+        eventService.setupResources();
 
         // act
-        final List<Event> allEvents = this.eventService.read();
+        eventService.read();
 
         // assert
-        assertThat(allEvents.size(), is(2));
-        assertThat(allEvents, contains(testEvent2, testEvent1));
+        verify(simpleControllerMock, times(1)).readOnly();
+        verify(eventRepositoryMock, times(1)).read();
     }
 
     @Test
     public void readOne() {
         // arrange
-        final Event testEvent = create(Event.builder()
-                .eventId(1L)
-                .title("Testevent")
-                .location("Testlocation")
-                .date(LocalDate.of(2099, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build());
+        final SimpleController<Serializable> simpleControllerMock = mock(SimpleController.class);
+        final EventRepository eventRepositoryMock = mock(EventRepository.class);
+        when(simpleControllerMock.readOnly()).thenReturn(eventRepositoryMock);
+        mockStatic(PersistenceManager.class);
+        when(PersistenceManager.createSimpleController(any(), any())).thenReturn(simpleControllerMock);
+        final EventService eventService = new EventService();
+        eventService.setupResources();
 
         // act
-        final Optional<Event> event = this.eventService.read(1L);
+        eventService.read(1L);
 
         // assert
-        assertThat(event.isPresent(), is(TRUE));
-        assertThat(event.get(), is(testEvent));
+        verify(simpleControllerMock, times(1)).readOnly();
+        verify(eventRepositoryMock, times(1)).read(1L);
     }
 
     @Test
     public void update() {
         // arrange
-        final Event originalTestEvent = create(Event.builder()
+        final SimpleController<Serializable> simpleControllerMock = mock(SimpleController.class);
+        mockStatic(PersistenceManager.class);
+        when(PersistenceManager.createSimpleController(any(), any())).thenReturn(simpleControllerMock);
+        final EventService eventService = new EventService();
+        eventService.setupResources();
+        final Event testEvent = Event.builder()
                 .eventId(1L)
                 .title("Testevent")
                 .location("Testlocation")
                 .date(LocalDate.of(2099, Month.DECEMBER, 31))
                 .time(LocalTime.of(22, 0))
-                .build());
-        final Event modifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated").build();
+                .build();
 
         // act
-        final Event updatedEvent = this.eventService.update(modifiedTestEvent);
+        eventService.update(testEvent);
 
         // assert
-        assertThat(updatedEvent, is(modifiedTestEvent));
-    }
-
-    @Test(expected = ConcurrentModificationException.class)
-    public void concurrentUpdate() {
-        // arrange
-        final Event originalTestEvent = create(Event.builder()
-                .eventId(1L)
-                .title("Testevent")
-                .location("Testlocation")
-                .date(LocalDate.of(2099, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build());
-        final Event firstModifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated 1").build();
-        final Event secondModifiedTestEvent = originalTestEvent.toBuilder().title("Testevent Updated 2").build();
-
-        // act
-        this.eventService.update(firstModifiedTestEvent);
-        this.eventService.update(secondModifiedTestEvent);
-
-        // assert
+        verify(simpleControllerMock, times(1)).executeAndQuery(anyObject());
     }
 
     @Test
     public void delete() {
         // arrange
-        final Event testEvent = create(Event.builder()
-                .title("Testevent")
-                .location("Testlocation")
-                .date(LocalDate.of(2099, Month.DECEMBER, 31))
-                .time(LocalTime.of(22, 0))
-                .build());
+        final SimpleController<Serializable> simpleControllerMock = mock(SimpleController.class);
+        mockStatic(PersistenceManager.class);
+        when(PersistenceManager.createSimpleController(any(), any())).thenReturn(simpleControllerMock);
+        final EventService eventService = new EventService();
+        eventService.setupResources();
 
         // act
-        final Event deletedEvent = this.eventService.delete(testEvent.getEventId());
+        eventService.delete(1L);
 
         // assert
-        assertThat(deletedEvent, is(testEvent));
+        verify(simpleControllerMock, times(1)).execute(any(VoidCommand.class));
     }
 
 }

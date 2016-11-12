@@ -24,6 +24,7 @@ import lombok.NonNull;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -45,6 +46,7 @@ public class EventsResource {
         this.eventService = eventService;
     }
 
+    @POST
     public Response create(@NonNull @Valid final Event event,
                            @NonNull @Context final UriInfo info) {
         final Event createdEvent = eventService.create(event);

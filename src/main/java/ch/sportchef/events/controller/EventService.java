@@ -17,66 +17,49 @@
  */
 package ch.sportchef.events.controller;
 
+import ch.sportchef.events.PersistenceManager;
 import ch.sportchef.events.entity.Event;
-import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
+import pl.setblack.airomem.core.SimpleController;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
-import java.time.LocalDateTime;
-import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class EventService {
 
-    private final Map<Long, Event> allEvents = new ConcurrentHashMap<>();
-    private final AtomicLong eventSequence = new AtomicLong(0);
+    private SimpleController<EventRepository> eventController;
+
+    @PostConstruct
+    public void setupResources() {
+        this.eventController = PersistenceManager.createSimpleController(Event.class, EventRepository::new);
+    }
+
+    @PreDestroy
+    public void cleanupResources() {
+        this.eventController.close();
+    }
 
     public Event create(@NonNull final Event event) {
-        final Long eventId = eventSequence.incrementAndGet();
-        final long version = event.hashCode();
-        final Event eventToCreate = event.toBuilder().eventId(eventId).version(version).build();
-        allEvents.put(eventId, eventToCreate);
-        return eventToCreate;
+        return this.eventController.executeAndQuery(mgr -> mgr.create(event));
     }
 
     public List<Event> read() {
-        return ImmutableList.copyOf(
-                allEvents.values().stream()
-                        .sorted((event1, event2) -> {
-                            final LocalDateTime event1DateTime = LocalDateTime.of(event1.getDate(), event1.getTime());
-                            final LocalDateTime event2DateTime = LocalDateTime.of(event2.getDate(), event2.getTime());
-                            return event1DateTime.compareTo(event2DateTime);
-                        })
-                        .collect(toList()));
+        return this.eventController.readOnly().read();
     }
 
     public Optional<Event> read(@NonNull final Long eventId) {
-        return Optional.ofNullable(allEvents.get(eventId));
+        return this.eventController.readOnly().read(eventId);
     }
 
     public Event update(@NonNull final Event event) {
-        final Long eventId = event.getEventId();
-        final Event previousEvent = read(eventId).orElse(null);
-        if (previousEvent == null) {
-            return null; // non-existing events can't be updated
-        }
-        if (!previousEvent.getVersion().equals(event.getVersion())) {
-            throw new ConcurrentModificationException("You tried to update an event that was modified concurrently!");
-        }
-        final long version = event.hashCode();
-        final Event eventToUpdate = event.toBuilder().version(version).build();
-        allEvents.put(eventId, eventToUpdate);
-        return eventToUpdate;
+        return this.eventController.executeAndQuery(mgr -> mgr.update(event));
     }
 
-    public Event delete(@NonNull final Long eventId) {
-        return allEvents.remove(eventId);
+    public void delete(@NonNull final Long eventId) {
+        this.eventController.execute(mgr -> mgr.delete(eventId));
     }
 }

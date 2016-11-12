@@ -156,7 +156,6 @@ public class EventResourceTest {
                 .time(LocalTime.of(22, 0))
                 .build();
         when(eventService.read(1L)).thenReturn(Optional.of(testEvent));
-        when(eventService.delete(1L)).thenReturn(testEvent);
 
         // act
         final Response response = eventResource.delete(1L);

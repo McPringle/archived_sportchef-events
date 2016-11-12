@@ -40,7 +40,7 @@ import static java.lang.Boolean.TRUE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +70,7 @@ public class EventsResourceTest {
         when(eventService.create(testEvent)).thenReturn(testEvent.toBuilder().eventId(1L).version(1L).build());
         final UriBuilder uriBuilder = mock(UriBuilder.class);
         final URI uri = new URI("/event/1");
-        when(uriBuilder.path(anyString())).thenReturn(uriBuilder);
+        when(uriBuilder.path((String) anyObject())).thenReturn(uriBuilder);
         when(uriBuilder.build()).thenReturn(uri);
         when(info.getAbsolutePathBuilder()).thenReturn(uriBuilder);
 
