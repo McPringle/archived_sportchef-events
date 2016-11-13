@@ -40,6 +40,10 @@ buildscript {
     }
 }
 
+war {
+    archiveName 'sportchef-events.war'
+}
+
 jacocoTestReport {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
