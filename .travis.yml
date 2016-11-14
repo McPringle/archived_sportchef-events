@@ -14,6 +14,7 @@ after_success:
   - docker build -t sportchef/events .
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push sportchef/events
+  - docker logout
 
 env:
   global:
