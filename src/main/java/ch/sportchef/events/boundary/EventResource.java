@@ -37,7 +37,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Optional;
 
-@Path("event/{eventId}")
+@Path("events/{eventId}")
 @Produces(MediaType.APPLICATION_JSON)
 public class EventResource {
 

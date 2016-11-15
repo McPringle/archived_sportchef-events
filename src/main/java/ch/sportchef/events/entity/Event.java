@@ -17,11 +17,11 @@
  */
 package ch.sportchef.events.entity;
 
-import com.google.common.base.Strings;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,18 +35,18 @@ public class Event implements Serializable {
 
     private Long eventId;
 
+    @NotNull
     private String title;
 
+    @NotNull
     private String location;
 
+    @NotNull
     private LocalDate date;
 
+    @NotNull
     private LocalTime time;
 
     private Long version;
-
-    public boolean isValid() {
-        return !Strings.isNullOrEmpty(title);
-    }
 
 }
