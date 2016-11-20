@@ -35,6 +35,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.nullValue;
 
 public class EventRepositoryTest {
 
@@ -137,6 +138,25 @@ public class EventRepositoryTest {
         eventRepository.update(eventToUpdate2);
 
         // assert
+    }
+
+    @Test
+    public void updateNonExistingEvent() {
+        // arrange
+        final EventRepository eventRepository = new EventRepository();
+        final Event eventToUpdate = Event.builder()
+                .eventId(1L)
+                .title("Testevent")
+                .location("Testlocation")
+                .date(LocalDate.of(2099, Month.DECEMBER, 31))
+                .time(LocalTime.of(22, 0))
+                .build();
+
+        // act
+        final Event updatedEvent = eventRepository.update(eventToUpdate);
+
+        // assert
+        assertThat(updatedEvent, is(nullValue()));
     }
 
     @Test
