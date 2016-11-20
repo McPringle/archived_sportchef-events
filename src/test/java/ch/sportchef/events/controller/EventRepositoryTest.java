@@ -116,7 +116,7 @@ public class EventRepositoryTest {
         final Event updatedEvent =  eventRepository.update(eventToUpdate);
 
         // assert
-        assertThat(updatedEvent.getTitle(), is(equalTo(eventToUpdate.getTitle())));
+        assertThat(updatedEvent, is(equalTo(eventToUpdate)));
         assertThat(updatedEvent.getVersion(), is(not(equalTo(eventToUpdate.getVersion()))));
     }
 
