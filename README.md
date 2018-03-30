@@ -1,5 +1,5 @@
-:bangbang: | This repository was archived. The development of the [Komunumo project](https://www.komunumo.org/) continues in new repositories. Please take a look at the [Komunumo organization](https://github.com/komunumo). Thank you very much!
------------- | -------------
+:bangbang: | This repository was archived. The development of the Sportchef project was stopped.
+---------- | ----------
 
 *SportChef Events*
 ==================
