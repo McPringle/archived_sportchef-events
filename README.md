@@ -1,9 +1,8 @@
+:bangbang: | This repository was archived. The development of the [Komunumo project](https://www.komunumo.org/) continues in new repositories. Please take a look at the [Komunumo organization](https://github.com/komunumo). Thank you very much!
+------------ | -------------
+
 *SportChef Events*
 ==================
-
-[![Build Status](https://travis-ci.org/sportchef/sportchef-events.svg?branch=master)](https://travis-ci.org/sportchef/sportchef-events) [![Coverage Status](https://coveralls.io/repos/github/sportchef/sportchef-events/badge.svg?branch=master)](https://coveralls.io/github/sportchef/sportchef-events?branch=master) [![Stories in Ready](https://badge.waffle.io/sportchef/sportchef-events.svg?label=ready&title=Ready)](http://waffle.io/sportchef/sportchef-events) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
-
-**This repository contains the code for the microservice handling the events of the *SportChef* project. For more information please take a look at our [project website](https://www.sportchef.ch/).**
 
 *Copyright (C) 2015, 2016 Marcus Fihlon*
 
@@ -12,7 +11,3 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-## Throughput
-
-[![Throughput Graph](https://graphs.waffle.io/sportchef/sportchef-events/throughput.svg)](https://waffle.io/sportchef/sportchef-events/metrics/throughput)
